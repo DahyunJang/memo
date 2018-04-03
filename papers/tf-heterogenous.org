@@ -1,0 +1,114 @@
+#+TITLE: TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems
+* 1. Introduction
+* 2. Programming Model and Basic Concepts
+** Operations and Kernels
+- operation은 attribute (data type)에 따라 polymorphinc
+- operation의 디바이스 별 구체적인 연산이 커널
+** sessions
+- 'extend' : 현재의 그래프에 노드, 엣지 추가
+- 'run': 연산할 그래프와 인풋을 실질적으로 계산. 클로져 연산 가능.
+** variables
+- persistent mutable tensor를 나타내는 특별한 assign(=) 종류의 오퍼레이션
+* 3. implementation
+** Devices
+- "/job:localhost/device:cpu:0"
+- "/job:worker/task:17/devcie:gpu:3" 과 같이 job할당 가능
+- 각 device object가 메모리, 디바이스 커널 실행을 책임진다.
+** Tensors
+* 3.1 single device execution
+- depenency count 가 0이 되어야 실행된다.
+- 노드 실행이 끝나면 해당 노드에 의존하는 노드의 count를 줄인다.
+
+* 3.2 Multi-Device Execution
+** Node Placement
+- 각 노드에 오퍼레이션이 지원되는지 확인
+- 그 때 그 때 제일 빨리 연산이 끝나는 노드에 할당 (greedy)
+** Cross-Device Communication
+- subgraph 가 여러 노드에 나눠져 있을 수 있다.
+- 한 디바이스에 여러 서브 그래프의 노드가 실행될 수 있다.
+- 그래프 당 한 run request
+- request 하나 안에는 디바이스 간 sed/recv 한 번만 일어나도록 한다.
+* 3.3 Distributed Execution
+- 디바이스간 데이터 이동은 TCP or RDMA를 이용
+** Fault Tolerance
+- src/rcv pair에 이상이 생기거나 마스터의 주기적인 health check에서 이상 감지
+- 실패 감지시 재시작
+- checkpoint를 resotring함
+* 4. Extensions
+* 4.1 Gradient Computation
+- 그래프에서 자동으로 back-propagation과정을 통해 gradient 계산이 이뤄진다.
+- backpropagation 과정에 필요한 텐서 중간 계산 값이 오래 메모리를 차지하게 되면 문제가 됨.
+- active research
+* 4.2 Partial Execution
+- subgraph 를 분리해서 실행.
+- 연결된 인풋노드를 feed 노드로 바꾸고, 연결된 아웃풋 노드는 fetch 노드로 바꾼다.
+- '연결할 노드 이름':'port'로 feed/fetch 붙임.
+- run 시 input, output을 지정해서 실행하면 해당 path 위의 subgraph만 실행됨.
+* 4.3 Device Constraints
+- 특정 노드를 특정 장치에, 특정 job/task에서 실행하도록 제한할 수 있다.
+- 특정 노드를 특정 variable과 colocate하도록 제한할 수 있다.
+- 앞서 노드 스케쥴링시 실행가능한 디바이스를 찾은 뒤 해당 제한 조건을 추가로 검토한다.
+* 4.4 Control Flow
+- 그래프에 conditionals와 loop가 필요한 경우가 있음
+- Switch and Merge op -> boolean tensor에 따른 분기. conditionals
+- Enter, Leave, and NextIterations op -> iterations
+- tags and frames conceptually similar to the MIT Tagged Token machine
+- iteration of a loop -> uniquely identified by a tag
+- 실행 상태는 frame 으로 표현됨.
+- input은 실행가능해지면 실행되고, 여러 이터레이션이 동시에 실행될 수 있음.
+- 그래프 파티셔닝시 컨트롤 노드를 추가
+- 각 이터레이션 마다 관련 디바이스에 컨트롤 메시지가 날아감.
+- conditionals나 iteration같은 컨트롤 플로우의 gradient도 알맞게 계산 필요
+- 기본적으로는 gradient에 필요한 값들을 저장하도록 그래프를 rewrite
+- 복잡한 부분은 생략...
+* 4.5 Input Operations
+- 클라이언트는 데이터의 메타정보만 전달
+- data는 storage에서 worker가 meta 정보를 통해 직접 읽어옴
+* 4.6 Queues
+- 데이터를 메모리 프리패치하거나 배치 처리를 위한 accumulation 등에 사용
+- FIFO, shuffling queues 지원
+* 4.7 Conditions
+- 세션간 공유되는, mutable, loger-lived sate로 variable이 여기 담김
+* 5. Optimization
+* 5.1 Common Subexpression Elimination
+- 여러 추상화 레이어로 그래프를 구성할 경우 그래프에 redundant copy가 생김
+- 하나의 노드만 있도록 그래프 처리.
+* 5.2 Controlling Data Communication and Memory Usage
+- gpu는 메모리가 매우 귀함.
+- 너무 일찍 인풋 값이 계산되지 않도록 해야함
+- 결과가 필요할 때 인풋을 계산하도록 control edges 추가
+* 5.3 Asynchronous Kernels
+- 보통은 sync지만 thread 자원이 부족할 때 async를 지원함.
+- Async I/O  -> Receive, Enqueue and Dequeue
+* 5.4 Optimized Libraries for Kernel Implementation
+- 디바이스 별 오픈소스 linear algebra library support
+- matrix multiplacation -> BLAS, cuBLAS
+- GPU convolutional kernels for DNN -> cuda-convnet, cuDNN
+* 5.5 Lossy Compression
+- precision에 어느정도 tolerant함.
+- 디바이스간 통신 시 소수점 precision을 줄인다 (32bit float-> 16bit float)
+- 32bit 원복시 손실된 부분은 0으로 채움
+* 6. Status and Experience
+* 7. Common Programming Idioms
+** Data Parallel Traing
+- minibatch 단위로 element를 쪼개고, 병렬화 시켜서 SGD speed up.
+- sync 하게 parameter 업데이트시 병렬화 안된 것과 같은 parameter값을 사용할 수 있음
+- parameter 업데이트 async로 할 수 있음 -> 'Large Sacle Distributed Deep Networks' 참고
+** Model Parallel Training
+- 각 단계별로 디바이스를 나눠서 병렬화할 수 있음
+** Concurrent Steps for Model Compuation Pipelining
+- 여러 디바이스 병렬화가 준비되지 않았을 때 하나의 디바이스에서 또 병렬화 하기도 함.(filling in the gaps)
+* 8. Performance
+- future work
+* 9. Tools
+* 9.1 TensorBoard: Visualization of graph structures and summary statistics
+* 9.2 Performance Tracing
+* 10. Future Work
+- jit
+* 11. related work
+- ...
+- drayad, flume -> complex workflow  dataflow graph
+- CIEL, naiad -> data-dependent control flow
+- spark -> computations that access the same data repeatedly using RDD
+- dandelion -> dataflow graphs across a cluster of heterogenous divices
+* 12. conclusion

@@ -1,0 +1,75 @@
+* TF/Develop/Mobile
+** Introduction to TFL
+- 임베디드 디바이스, 모바일 환경 지원을 위함
+- 작은 레이턴시, 작은 바이너리 사이즈
+- 모바일 애프리케이션을 위한 커널(operators) 최적화
+*** What does TFL contain ?
+**** Set of core operators
+- 고정 소수점 연산(quantized) 우선시.
+- quantizazed는 플롯팅 포인트를 고정소수점으로 연산하는 것.
+- (quantized kernels that allow smaller and faster)
+- 오퍼레이터에 pre-fused activations and biases (?)
+- 기타 커널별 최적화
+- 커스텀 오퍼레이션 작성 가능한 C API 지원
+**** flatbuffers
+- protocol Buffer 보다 성능이 좋음
+- flatbuffers를 이용한 파일 포맷
+- more memory efficient
+- no-unmarshalling step (mmap)
+**** 모바일 전용 최적화된 인터프리터
+- 하드웨어 의존성 최소화.
+- 스태틱한 메모리 관리: static graph ordering and less-dynamic memory allocator (?)
+- 작은 바이너리. 기존의 1/10 수준
+- (오퍼레이션들이 다 모듈화 되어있어 필요한 모듈만 로드)
+- 미니멀한 로드로 빠른 초기화, 작은 실행 레이턴시
+**** 하드웨어 가속화
+- 가능한 부분에 대해서 안드로이드 NN library 로 지원
+- 다양한 하드웨어에서의 low-level DSP(digital signal processing) 최적화 등
+*** Why do we need a new mobile-specific library?
+- 핸드폰의 성능의 발전으로 NN api를 사용할 수 있게 됨.
+- 실시간 컴퓨터 비젼/ 언어 분석/ 기타 가능성의 발전
+- 강력한 유저 데이터 프라이버시 요구
+- 오프라인에서의 필요성
+*** TFL developer preview highliths
+- 모바일 환경에 최적화된 코어 오퍼레이터들. 개발자가 추가 작성 가능.
+- 플랫버퍼 기반의 파일 포맷.
+- 모바일 환경에 최적화된 온디바이스 인터프리터
+- 텐서플로우 학습 모델들을 TFL 포맷으로 변환해주는 TF convertor
+- TFL은 오퍼레이터를 모두 연결해도 300KB 보다 작다.
+- 필요한 오퍼레이터만 로드할 경우 더 사이즈가 작아진다. (less than 200KB inceptionV3 and Mobilenet)
+- 고정 소수점 연산을 사용하는 모델이 훨씬 빠르다.
+- java and c++ api support
+**** pre-tested models
+- inceptionv3: 이미지의 주요한 오브젝트 감지
+- MobileNets: 모바일 환경에서 이미지 감지 모델 (정확도가 좀 떨어지는 가벼운 모델)
+*** TLF architectures
+- Trained TF model -> TLF converter -> TFL model file (.tflite)
+- 일반 컴퓨팅 환경에서 모델 학습 후 모바일 버전으로 변환.
+- 모바일 환경의 인터프리터가 예측 실행.
+- java api(안드로이드만) -> C++ api -> 인터프리터
+- 인터프리터가 선택적인 커널 로딩을 지원해, 메모리 사이즈를 줄일 수 있다.
+- 안드로이드의 경우 안드로이드 프레임워크 일부인 하드웨어 가속 기능을 사용할 수 있다.
+** 모바일 구성을 위한 모델 준비
+*** What is up with all different saved file formats?
+**** NodeDef
+- constant 를 포함하는 하나의 오퍼레이션
+**** Checkpoint
+- 주기적으로 업데이트되는 variable들을 저장한다.
+- 가장 최신의 체크포인트가 reference.
+**** Graphdef
+- NodeDef 의 리스트를 갖고 있고, 실행할 그래프를 정의한다.
+- 동적으로 체크포인트의 variable을 로드해 weight를 적용한다.
+***** freeze graph
+- 트레인 시 가변적인 variable을 const로 바꿔 그래프에 저장한다.
+- Can load the resulting file in a single call
+**** FunctionDefLibrary
+- GraphDef 내의 sub-graph
+**** MetaGraphDef
+- 그래프 구조외의 메타데이터. checkpoint 정보, 기타 편의를 위한 tag, signatures.
+**** SavedModel
+- 같은 그래프를 다른 환경에서 실행할 경우의 버전 관리
+- metaGraphDef + checkpoint + extra metadata
+*** How do you get a model you can use on mobile ?
+- GraphDef와 최신 체크포인트를 이용해 freeze graph
+- 얻어진 그래프를 분석해 train에만 사용되는 노드를 제거한다.
+- 그래프에 주어진 데이터 포맷을 알맞게 변환하는 과정을 덧붙인다.

@@ -1,0 +1,113 @@
+* stanford - cs224n
+- natural language processing (NLP)
+- https://www.youtube.com/watch?v=OQQ-W_63UgQ
+
+* lecture7 - introduction to tf
+** node -> op, edge -> tensor, w, b -> variable, x -> palceholder
+*** variable (튜닝용)
+- stateful nodes witch output their current value
+- make gradient update too. tune to minimize the loss
+#+BEGIN_SRC python
+ b = tf.Variable(tf.zeros((100,)))
+ W = tf.Variable(tf.random_uniform((784,100), -1, 1))
+#+END_SRC
+*** palceholder (state 없는 인풋 데이터)
+- fed in execution time. input. assign data and shape.
+- x = tf.placeholder(tf.float32, (100, 784))
+*** node
+- mathmatical
+- variable with initial value, but placeholder is not. no data at init.
+
+#+BEGIN_SRC python
+ h = tf.nn.relu(tf.matmul(x,W) + b)
+#+END_SRC
+
+** session: binding to a particular execution context.
+- fetches : list of graph nodes. return the outputs of theses nodes.
+- feeds : dictionary mapping from graph nodes to concrete values.
+- sess.run(fetches, feeds)
+- concept of lazy execution -- > session run 시에 계산함.
+
+#+BEGIN_SRC python
+ sess =tf.Session()
+ sess.run(tf.initialize_all_variables())
+ sess.run(h, {x: np.random.random(100,784)})
+#+END_SRC
+
+- x 를 dcitionary 형태로 넘겨서 h 오퍼레이션 실행함.
+** how do we define the loss
+- use placeholder ofr labels
+- build loss node using labes and prediction.
+
+#+BEGIN_SRC python
+ prediction = tf.nn.softmax(..) -> output of neural network  //점수
+ label = tf.placeholder(tf.float32, [100,10])
+ cross_entropy = -tf.reduce_sum(label * tf.log(prediction), axis=1)
+#+END_SRC
+
+** how do we compute gradients?
+- use optizizer object. add optimization operation to computation graph.
+- apply gradient to variables.
+#+
+ train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+#+
+** traing the model
+- create session -> build training schedule -> run train_step.
+#+
+ sess = tf.Session()
+ sess.run(tf.initialize_all_variable())
+
+ for i in trange(1000):
+  batch_x, batch_lable = data.next_batch()
+  sess.run(train_step, feed_dict = { x: batch_x, label: batch_label})
+  //train_step안에, loss function 에서 batch_label 사용함.
+#+
+** variable sharing
+- train model over sevral session.
+- variable scope..
+- get_variable - access or create in designated var in the scope.
+** summary of running.
+- build graph
+- initialize session
+- run step op.
+** running example - basic
+#+BEGIN_SRC python
+// x input, y label.
+def generate_dataset():
+ x_batch = np.linspace(-1, 1, 101)
+ y_batch = 2 * x_batch + np.random.randn(*x_batch.shape) * 0.3
+ return x_batch, y_batch
+
+def linear_regression():
+ x = tf.placeholder(tf.float32, shape=(NOne,), name='x')
+ y = tf.placeholder(tf.float32, shape=(None,), name='y')
+ with tf.variable_scope(lreg') as scope:
+  w = tf.variable(np.random.normal(), name='W')
+  y_pred=tf.mul(w,x)
+
+  loss = tf.reduce_mean(tf.square(y_pred - y ))
+retrun x, y, y_pred, loss
+
+def run():
+ x_batch, y_batch = generate_dataset()
+ x, y, y_pred, loss = liniear_regression()
+ optiziser = tf.train.GradientDescentOptimizer(0.1).minimize(loss)
+ init = tf.global_variables_initializer()
+
+ with tf.Session() as session:
+  session.run(init)
+
+  feed_dict = {x: x_batch, y: y_batch}
+  for _ in range(30):
+   loss_val, _ = session. run([loss, optimizer], feed_dict)
+   print('loss:', loss_val,mean())
+
+  y_pred_batch = session.run(y_pred, {x:x_batch})
+
+ plt.figure(1)
+ plt.scatter(x_batch, y_batch)
+ plt.plot(x_batch, y_pred_batch)
+
+
+#+END_SRC
+** running example - word2vec (더 안봄)

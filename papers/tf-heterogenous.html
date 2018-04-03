@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems</title>
+<!-- 2018-03-19 월 09:40 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="dahyun" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TensorFlow: Large-Scale Machine Learning on Heterogeneous Distributed Systems</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 1. Introduction</a></li>
+<li><a href="#sec-2">2. 2. Programming Model and Basic Concepts</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Operations and Kernels</a></li>
+<li><a href="#sec-2-2">2.2. sessions</a></li>
+<li><a href="#sec-2-3">2.3. variables</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 3. implementation</a>
+<ul>
+<li><a href="#sec-3-1">3.1. Devices</a></li>
+<li><a href="#sec-3-2">3.2. Tensors</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. 3.1 single device execution</a></li>
+<li><a href="#sec-5">5. 3.2 Multi-Device Execution</a>
+<ul>
+<li><a href="#sec-5-1">5.1. Node Placement</a></li>
+<li><a href="#sec-5-2">5.2. Cross-Device Communication</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6. 3.3 Distributed Execution</a>
+<ul>
+<li><a href="#sec-6-1">6.1. Fault Tolerance</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7. 4. Extensions</a></li>
+<li><a href="#sec-8">8. 4.1 Gradient Computation</a></li>
+<li><a href="#sec-9">9. 4.2 Partial Execution</a></li>
+<li><a href="#sec-10">10. 4.3 Device Constraints</a></li>
+<li><a href="#sec-11">11. 4.4 Control Flow</a></li>
+<li><a href="#sec-12">12. 4.5 Input Operations</a></li>
+<li><a href="#sec-13">13. 4.6 Queues</a></li>
+<li><a href="#sec-14">14. 4.7 Conditions</a></li>
+<li><a href="#sec-15">15. 5. Optimization</a></li>
+<li><a href="#sec-16">16. 5.1 Common Subexpression Elimination</a></li>
+<li><a href="#sec-17">17. 5.2 Controlling Data Communication and Memory Usage</a></li>
+<li><a href="#sec-18">18. 5.3 Asynchronous Kernels</a></li>
+<li><a href="#sec-19">19. 5.4 Optimized Libraries for Kernel Implementation</a></li>
+<li><a href="#sec-20">20. 5.5 Lossy Compression</a></li>
+<li><a href="#sec-21">21. 6. Status and Experience</a></li>
+<li><a href="#sec-22">22. 7. Common Programming Idioms</a>
+<ul>
+<li><a href="#sec-22-1">22.1. Data Parallel Traing</a></li>
+<li><a href="#sec-22-2">22.2. Model Parallel Training</a></li>
+<li><a href="#sec-22-3">22.3. Concurrent Steps for Model Compuation Pipelining</a></li>
+</ul>
+</li>
+<li><a href="#sec-23">23. 8. Performance</a></li>
+<li><a href="#sec-24">24. 9. Tools</a></li>
+<li><a href="#sec-25">25. 9.1 TensorBoard: Visualization of graph structures and summary statistics</a></li>
+<li><a href="#sec-26">26. 9.2 Performance Tracing</a></li>
+<li><a href="#sec-27">27. 10. Future Work</a></li>
+<li><a href="#sec-28">28. 11. related work</a></li>
+<li><a href="#sec-29">29. 12. conclusion</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 1. Introduction</h2>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 2. Programming Model and Basic Concepts</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Operations and Kernels</h3>
+<div class="outline-text-3" id="text-2-1">
+<ul class="org-ul">
+<li>operation은 attribute (data type)에 따라 polymorphinc
+</li>
+<li>operation의 디바이스 별 구체적인 연산이 커널
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> sessions</h3>
+<div class="outline-text-3" id="text-2-2">
+<ul class="org-ul">
+<li>'extend' : 현재의 그래프에 노드, 엣지 추가
+</li>
+<li>'run': 연산할 그래프와 인풋을 실질적으로 계산. 클로져 연산 가능.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> variables</h3>
+<div class="outline-text-3" id="text-2-3">
+<ul class="org-ul">
+<li>persistent mutable tensor를 나타내는 특별한 assign(=) 종류의 오퍼레이션
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 3. implementation</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Devices</h3>
+<div class="outline-text-3" id="text-3-1">
+<ul class="org-ul">
+<li>"/job:localhost/device:cpu:0"
+</li>
+<li>"/job:worker/task:17/devcie:gpu:3" 과 같이 job할당 가능
+</li>
+<li>각 device object가 메모리, 디바이스 커널 실행을 책임진다.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Tensors</h3>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 3.1 single device execution</h2>
+<div class="outline-text-2" id="text-4">
+<ul class="org-ul">
+<li>depenency count 가 0이 되어야 실행된다.
+</li>
+<li>노드 실행이 끝나면 해당 노드에 의존하는 노드의 count를 줄인다.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 3.2 Multi-Device Execution</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Node Placement</h3>
+<div class="outline-text-3" id="text-5-1">
+<ul class="org-ul">
+<li>각 노드에 오퍼레이션이 지원되는지 확인
+</li>
+<li>그 때 그 때 제일 빨리 연산이 끝나는 노드에 할당 (greedy)
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> Cross-Device Communication</h3>
+<div class="outline-text-3" id="text-5-2">
+<ul class="org-ul">
+<li>subgraph 가 여러 노드에 나눠져 있을 수 있다.
+</li>
+<li>한 디바이스에 여러 서브 그래프의 노드가 실행될 수 있다.
+</li>
+<li>그래프 당 한 run request
+</li>
+<li>request 하나 안에는 디바이스 간 sed/recv 한 번만 일어나도록 한다.
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 3.3 Distributed Execution</h2>
+<div class="outline-text-2" id="text-6">
+<ul class="org-ul">
+<li>디바이스간 데이터 이동은 TCP or RDMA를 이용
+</li>
+</ul>
+</div>
+<div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> Fault Tolerance</h3>
+<div class="outline-text-3" id="text-6-1">
+<ul class="org-ul">
+<li>src/rcv pair에 이상이 생기거나 마스터의 주기적인 health check에서 이상 감지
+</li>
+<li>실패 감지시 재시작
+</li>
+<li>checkpoint를 resotring함
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 4. Extensions</h2>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> 4.1 Gradient Computation</h2>
+<div class="outline-text-2" id="text-8">
+<ul class="org-ul">
+<li>그래프에서 자동으로 back-propagation과정을 통해 gradient 계산이 이뤄진다.
+</li>
+<li>backpropagation 과정에 필요한 텐서 중간 계산 값이 오래 메모리를 차지하게 되면 문제가 됨.
+</li>
+<li>active research
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> 4.2 Partial Execution</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li>subgraph 를 분리해서 실행.
+</li>
+<li>연결된 인풋노드를 feed 노드로 바꾸고, 연결된 아웃풋 노드는 fetch 노드로 바꾼다.
+</li>
+<li>'연결할 노드 이름':'port'로 feed/fetch 붙임.
+</li>
+<li>run 시 input, output을 지정해서 실행하면 해당 path 위의 subgraph만 실행됨.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> 4.3 Device Constraints</h2>
+<div class="outline-text-2" id="text-10">
+<ul class="org-ul">
+<li>특정 노드를 특정 장치에, 특정 job/task에서 실행하도록 제한할 수 있다.
+</li>
+<li>특정 노드를 특정 variable과 colocate하도록 제한할 수 있다.
+</li>
+<li>앞서 노드 스케쥴링시 실행가능한 디바이스를 찾은 뒤 해당 제한 조건을 추가로 검토한다.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> 4.4 Control Flow</h2>
+<div class="outline-text-2" id="text-11">
+<ul class="org-ul">
+<li>그래프에 conditionals와 loop가 필요한 경우가 있음
+</li>
+<li>Switch and Merge op -&gt; boolean tensor에 따른 분기. conditionals
+</li>
+<li>Enter, Leave, and NextIterations op -&gt; iterations
+</li>
+<li>tags and frames conceptually similar to the MIT Tagged Token machine
+</li>
+<li>iteration of a loop -&gt; uniquely identified by a tag
+</li>
+<li>실행 상태는 frame 으로 표현됨.
+</li>
+<li>input은 실행가능해지면 실행되고, 여러 이터레이션이 동시에 실행될 수 있음.
+</li>
+<li>그래프 파티셔닝시 컨트롤 노드를 추가
+</li>
+<li>각 이터레이션 마다 관련 디바이스에 컨트롤 메시지가 날아감.
+</li>
+<li>conditionals나 iteration같은 컨트롤 플로우의 gradient도 알맞게 계산 필요
+</li>
+<li>기본적으로는 gradient에 필요한 값들을 저장하도록 그래프를 rewrite
+</li>
+<li>복잡한 부분은 생략&#x2026;
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> 4.5 Input Operations</h2>
+<div class="outline-text-2" id="text-12">
+<ul class="org-ul">
+<li>클라이언트는 데이터의 메타정보만 전달
+</li>
+<li>data는 storage에서 worker가 meta 정보를 통해 직접 읽어옴
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> 4.6 Queues</h2>
+<div class="outline-text-2" id="text-13">
+<ul class="org-ul">
+<li>데이터를 메모리 프리패치하거나 배치 처리를 위한 accumulation 등에 사용
+</li>
+<li>FIFO, shuffling queues 지원
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> 4.7 Conditions</h2>
+<div class="outline-text-2" id="text-14">
+<ul class="org-ul">
+<li>세션간 공유되는, mutable, loger-lived sate로 variable이 여기 담김
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-15" class="outline-2">
+<h2 id="sec-15"><span class="section-number-2">15</span> 5. Optimization</h2>
+</div>
+<div id="outline-container-sec-16" class="outline-2">
+<h2 id="sec-16"><span class="section-number-2">16</span> 5.1 Common Subexpression Elimination</h2>
+<div class="outline-text-2" id="text-16">
+<ul class="org-ul">
+<li>여러 추상화 레이어로 그래프를 구성할 경우 그래프에 redundant copy가 생김
+</li>
+<li>하나의 노드만 있도록 그래프 처리.
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-17" class="outline-2">
+<h2 id="sec-17"><span class="section-number-2">17</span> 5.2 Controlling Data Communication and Memory Usage</h2>
+<div class="outline-text-2" id="text-17">
+<ul class="org-ul">
+<li>gpu는 메모리가 매우 귀함.
+</li>
+<li>너무 일찍 인풋 값이 계산되지 않도록 해야함
+</li>
+<li>결과가 필요할 때 인풋을 계산하도록 control edges 추가
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-18" class="outline-2">
+<h2 id="sec-18"><span class="section-number-2">18</span> 5.3 Asynchronous Kernels</h2>
+<div class="outline-text-2" id="text-18">
+<ul class="org-ul">
+<li>보통은 sync지만 thread 자원이 부족할 때 async를 지원함.
+</li>
+<li>Async I/O  -&gt; Receive, Enqueue and Dequeue
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-19" class="outline-2">
+<h2 id="sec-19"><span class="section-number-2">19</span> 5.4 Optimized Libraries for Kernel Implementation</h2>
+<div class="outline-text-2" id="text-19">
+<ul class="org-ul">
+<li>디바이스 별 오픈소스 linear algebra library support
+</li>
+<li>matrix multiplacation -&gt; BLAS, cuBLAS
+</li>
+<li>GPU convolutional kernels for DNN -&gt; cuda-convnet, cuDNN
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-20" class="outline-2">
+<h2 id="sec-20"><span class="section-number-2">20</span> 5.5 Lossy Compression</h2>
+<div class="outline-text-2" id="text-20">
+<ul class="org-ul">
+<li>precision에 어느정도 tolerant함.
+</li>
+<li>디바이스간 통신 시 소수점 precision을 줄인다 (32bit float-&gt; 16bit float)
+</li>
+<li>32bit 원복시 손실된 부분은 0으로 채움
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-21" class="outline-2">
+<h2 id="sec-21"><span class="section-number-2">21</span> 6. Status and Experience</h2>
+</div>
+<div id="outline-container-sec-22" class="outline-2">
+<h2 id="sec-22"><span class="section-number-2">22</span> 7. Common Programming Idioms</h2>
+<div class="outline-text-2" id="text-22">
+</div><div id="outline-container-sec-22-1" class="outline-3">
+<h3 id="sec-22-1"><span class="section-number-3">22.1</span> Data Parallel Traing</h3>
+<div class="outline-text-3" id="text-22-1">
+<ul class="org-ul">
+<li>minibatch 단위로 element를 쪼개고, 병렬화 시켜서 SGD speed up.
+</li>
+<li>sync 하게 parameter 업데이트시 병렬화 안된 것과 같은 parameter값을 사용할 수 있음
+</li>
+<li>parameter 업데이트 async로 할 수 있음 -&gt; 'Large Sacle Distributed Deep Networks' 참고
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-22-2" class="outline-3">
+<h3 id="sec-22-2"><span class="section-number-3">22.2</span> Model Parallel Training</h3>
+<div class="outline-text-3" id="text-22-2">
+<ul class="org-ul">
+<li>각 단계별로 디바이스를 나눠서 병렬화할 수 있음
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-22-3" class="outline-3">
+<h3 id="sec-22-3"><span class="section-number-3">22.3</span> Concurrent Steps for Model Compuation Pipelining</h3>
+<div class="outline-text-3" id="text-22-3">
+<ul class="org-ul">
+<li>여러 디바이스 병렬화가 준비되지 않았을 때 하나의 디바이스에서 또 병렬화 하기도 함.(filling in the gaps)
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-23" class="outline-2">
+<h2 id="sec-23"><span class="section-number-2">23</span> 8. Performance</h2>
+<div class="outline-text-2" id="text-23">
+<ul class="org-ul">
+<li>future work
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-24" class="outline-2">
+<h2 id="sec-24"><span class="section-number-2">24</span> 9. Tools</h2>
+</div>
+<div id="outline-container-sec-25" class="outline-2">
+<h2 id="sec-25"><span class="section-number-2">25</span> 9.1 TensorBoard: Visualization of graph structures and summary statistics</h2>
+</div>
+<div id="outline-container-sec-26" class="outline-2">
+<h2 id="sec-26"><span class="section-number-2">26</span> 9.2 Performance Tracing</h2>
+</div>
+<div id="outline-container-sec-27" class="outline-2">
+<h2 id="sec-27"><span class="section-number-2">27</span> 10. Future Work</h2>
+<div class="outline-text-2" id="text-27">
+<ul class="org-ul">
+<li>jit
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-28" class="outline-2">
+<h2 id="sec-28"><span class="section-number-2">28</span> 11. related work</h2>
+<div class="outline-text-2" id="text-28">
+<ul class="org-ul">
+<li>&#x2026;
+</li>
+<li>drayad, flume -&gt; complex workflow  dataflow graph
+</li>
+<li>CIEL, naiad -&gt; data-dependent control flow
+</li>
+<li>spark -&gt; computations that access the same data repeatedly using RDD
+</li>
+<li>dandelion -&gt; dataflow graphs across a cluster of heterogenous divices
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-29" class="outline-2">
+<h2 id="sec-29"><span class="section-number-2">29</span> 12. conclusion</h2>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: dahyun</p>
+<p class="date">Created: 2018-03-19 월 09:40</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

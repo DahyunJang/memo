@@ -1,0 +1,86 @@
+#+TITLE: google protocol buffer language guide
+* repeated int32 samples = 4 [packed=true];
+** specifying field types
+- int, string 같은 scalar type혹은 enum 사용
+** Assigning Tags
+- 각 엘리먼트에 태그를 붙여 관리함.
+- 태그는 [1,2^29-1] 범위
+- 1-15는 1byte, 16-2047은 2byte 식으로 컴팩트하게 태그를 인코딩
+- 자주 쓰는 엘리먼트는 작은 수의 태그를 사용할 것
+** specifying Field Rules
+*** required
+- 필수
+*** optional
+- 있을 수도, 없을 수도
+*** repeated
+- 반복(array)
+- 역사적인 이유로 repeate는 인코딩을 제대로 하기가 힘들다
+- [packed=true] 사용해 컴파일 시 인코딩 효율적으로 가능
+*** reserved
+- 명시적인 delete.
+- 내용 수정시 예전 데이터와 섞여 문제가 일어나는 경우 방지.
+** Adding More Message Types
+- .proto 파일에서 여러 메시지 표현 가능.
+- 연속해서 message {} 표현하면 됨.
+** reserved fields
+- 데이터 업데이트시 과거 버전의 데이터를 사용하게되는 혼란을 방지하기 위해.
+- reserved 2, 9 to 11; // tag delete
+- reserved "foo", "bar"; // filed delete
+** What's generated from you .proto?
+- c++ -> *.pb.cc, *.pb.h 데이터 정의 파일
+- java -> .java 데이터 정의 파일과 builder 클래스도 생성
+- python -> 런타임시 필요한 메타 클래스에 사용되는 모듈 with static descriptor
+- Go -> .pb.go
+** optional fields and default values
+- 옵셔널 필드가 주어지지 않았을 때 디폴트 값을 넣도록 해준다
+- optional int32 result_per_page = 3 [default = 10]
+** enumerations
+- 메시지 정의 안에 enum을 넣을 수 있다.
+#+START
+message SarchRequest {
+ required string query = 1;
+ optional int32 page_number = 2;
+ enum Corpus {
+  UNIV = 0;
+  VIDEO = 6;
+ }
+ optional Corpus corpus = 4 [default = UNIV];
+}
+#+END
+- enum안의 필드에 대해 같은 값을 갖도록 허용해 줄 수 있음
+- enum 정의 할 때 'option allow_alias = true' 를 추가한다.
+** Using Other Message Types
+- 기본 타입 외에도, 정의된 다른 메시지도 타입으로 사용 가능.
+#+START
+message SearchResponse {
+ repeated Result result = 1;
+}
+message Result {
+ required string url = 1;
+ optional string title = 2;
+ repeated string snippets = 3;
+}
+#+END
+** importing definitions
+- 다른 .proto 파일을 import로 불러올 수 있다.
+- 하지만 import된 파일이 import하는 파일은 public 에 한해 볼 수 있다.
+#+START
+import public "new.proto" //해당 파일을 import한 파일에서도 접근 가능
+import "other.proto" // 접근 불가능
+#+END
+** Nested Types
+- nested 표현 가능
+- 같은 레벨에서는 그냥, 외부에선 A.B로 접근
+** Extensions
+- 메시지 안에서 이후의 태그 정의를 위해 미리 태그를 할당 해 놓을 수 있다.
+- 해당 태그를 메시지 정의한 범위 밖에서 필드를 정의할 수 있음.
+** Oneof
+- C의 union과 비슷하게, 메모리 공간은 하나 잡고 둘 중 하나의 필드를 사용
+#+START
+message Sample {
+ oneof test_oneof{
+  string name = 4;
+  sub sub_message = 0;
+ }
+}
+#+END

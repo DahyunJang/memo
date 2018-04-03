@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>TFL-summary</title>
+<!-- 2018-03-19 월 09:51 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="dahyun" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">TFL-summary</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. TF/Develop/Mobile</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Introduction to TFL</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. What does TFL contain ?</a></li>
+<li><a href="#sec-1-1-2">1.1.2. Why do we need a new mobile-specific library?</a></li>
+<li><a href="#sec-1-1-3">1.1.3. TFL developer preview highliths</a></li>
+<li><a href="#sec-1-1-4">1.1.4. TLF architectures</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2. 모바일 구성을 위한 모델 준비</a>
+<ul>
+<li><a href="#sec-1-2-1">1.2.1. What is up with all different saved file formats?</a></li>
+<li><a href="#sec-1-2-2">1.2.2. How do you get a model you can use on mobile ?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> TF/Develop/Mobile</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Introduction to TFL</h3>
+<div class="outline-text-3" id="text-1-1">
+<ul class="org-ul">
+<li>임베디드 디바이스, 모바일 환경 지원을 위함
+</li>
+<li>작은 레이턴시, 작은 바이너리 사이즈
+</li>
+<li>모바일 애프리케이션을 위한 커널(operators) 최적화
+</li>
+</ul>
+</div>
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> What does TFL contain ?</h4>
+<div class="outline-text-4" id="text-1-1-1">
+</div><ol class="org-ol"><li><a id="sec-1-1-1-1" name="sec-1-1-1-1"></a>Set of core operators<br  /><div class="outline-text-5" id="text-1-1-1-1">
+<ul class="org-ul">
+<li>고정 소수점 연산(quantized) 우선시.
+</li>
+<li>quantizazed는 플롯팅 포인트를 고정소수점으로 연산하는 것.
+</li>
+<li>(quantized kernels that allow smaller and faster)
+</li>
+<li>오퍼레이터에 pre-fused activations and biases (?)
+</li>
+<li>기타 커널별 최적화
+</li>
+<li>커스텀 오퍼레이션 작성 가능한 C API 지원
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-1-1-2" name="sec-1-1-1-2"></a>flatbuffers<br  /><div class="outline-text-5" id="text-1-1-1-2">
+<ul class="org-ul">
+<li>protocol Buffer 보다 성능이 좋음
+</li>
+<li>flatbuffers를 이용한 파일 포맷
+</li>
+<li>more memory efficient
+</li>
+<li>no-unmarshalling step (mmap)
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-1-1-3" name="sec-1-1-1-3"></a>모바일 전용 최적화된 인터프리터<br  /><div class="outline-text-5" id="text-1-1-1-3">
+<ul class="org-ul">
+<li>하드웨어 의존성 최소화.
+</li>
+<li>스태틱한 메모리 관리: static graph ordering and less-dynamic memory allocator (?)
+</li>
+<li>작은 바이너리. 기존의 1/10 수준
+</li>
+<li>(오퍼레이션들이 다 모듈화 되어있어 필요한 모듈만 로드)
+</li>
+<li>미니멀한 로드로 빠른 초기화, 작은 실행 레이턴시
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-1-1-4" name="sec-1-1-1-4"></a>하드웨어 가속화<br  /><div class="outline-text-5" id="text-1-1-1-4">
+<ul class="org-ul">
+<li>가능한 부분에 대해서 안드로이드 NN library 로 지원
+</li>
+<li>다양한 하드웨어에서의 low-level DSP(digital signal processing) 최적화 등
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> Why do we need a new mobile-specific library?</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<ul class="org-ul">
+<li>핸드폰의 성능의 발전으로 NN api를 사용할 수 있게 됨.
+</li>
+<li>실시간 컴퓨터 비젼/ 언어 분석/ 기타 가능성의 발전
+</li>
+<li>강력한 유저 데이터 프라이버시 요구
+</li>
+<li>오프라인에서의 필요성
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> TFL developer preview highliths</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<ul class="org-ul">
+<li>모바일 환경에 최적화된 코어 오퍼레이터들. 개발자가 추가 작성 가능.
+</li>
+<li>플랫버퍼 기반의 파일 포맷.
+</li>
+<li>모바일 환경에 최적화된 온디바이스 인터프리터
+</li>
+<li>텐서플로우 학습 모델들을 TFL 포맷으로 변환해주는 TF convertor
+</li>
+<li>TFL은 오퍼레이터를 모두 연결해도 300KB 보다 작다.
+</li>
+<li>필요한 오퍼레이터만 로드할 경우 더 사이즈가 작아진다. (less than 200KB inceptionV3 and Mobilenet)
+</li>
+<li>고정 소수점 연산을 사용하는 모델이 훨씬 빠르다.
+</li>
+<li>java and c++ api support
+</li>
+</ul>
+</div>
+<ol class="org-ol"><li><a id="sec-1-1-3-1" name="sec-1-1-3-1"></a>pre-tested models<br  /><div class="outline-text-5" id="text-1-1-3-1">
+<ul class="org-ul">
+<li>inceptionv3: 이미지의 주요한 오브젝트 감지
+</li>
+<li>MobileNets: 모바일 환경에서 이미지 감지 모델 (정확도가 좀 떨어지는 가벼운 모델)
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4"><span class="section-number-4">1.1.4</span> TLF architectures</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<ul class="org-ul">
+<li>Trained TF model -&gt; TLF converter -&gt; TFL model file (.tflite)
+</li>
+<li>일반 컴퓨팅 환경에서 모델 학습 후 모바일 버전으로 변환.
+</li>
+<li>모바일 환경의 인터프리터가 예측 실행.
+</li>
+<li>java api(안드로이드만) -&gt; C++ api -&gt; 인터프리터
+</li>
+<li>인터프리터가 선택적인 커널 로딩을 지원해, 메모리 사이즈를 줄일 수 있다.
+</li>
+<li>안드로이드의 경우 안드로이드 프레임워크 일부인 하드웨어 가속 기능을 사용할 수 있다.
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 모바일 구성을 위한 모델 준비</h3>
+<div class="outline-text-3" id="text-1-2">
+</div><div id="outline-container-sec-1-2-1" class="outline-4">
+<h4 id="sec-1-2-1"><span class="section-number-4">1.2.1</span> What is up with all different saved file formats?</h4>
+<div class="outline-text-4" id="text-1-2-1">
+</div><ol class="org-ol"><li><a id="sec-1-2-1-1" name="sec-1-2-1-1"></a>NodeDef<br  /><div class="outline-text-5" id="text-1-2-1-1">
+<ul class="org-ul">
+<li>constant 를 포함하는 하나의 오퍼레이션
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-2-1-2" name="sec-1-2-1-2"></a>Checkpoint<br  /><div class="outline-text-5" id="text-1-2-1-2">
+<ul class="org-ul">
+<li>주기적으로 업데이트되는 variable들을 저장한다.
+</li>
+<li>가장 최신의 체크포인트가 reference.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-2-1-3" name="sec-1-2-1-3"></a>Graphdef<br  /><div class="outline-text-5" id="text-1-2-1-3">
+<ul class="org-ul">
+<li>NodeDef 의 리스트를 갖고 있고, 실행할 그래프를 정의한다.
+</li>
+<li>동적으로 체크포인트의 variable을 로드해 weight를 적용한다.
+</li>
+</ul>
+</div>
+<ol class="org-ol"><li><a id="sec-1-2-1-3-1" name="sec-1-2-1-3-1"></a>freeze graph<br  /><div class="outline-text-6" id="text-1-2-1-3-1">
+<ul class="org-ul">
+<li>트레인 시 가변적인 variable을 const로 바꿔 그래프에 저장한다.
+</li>
+<li>Can load the resulting file in a single call
+</li>
+</ul>
+</div>
+</li></ol>
+</li>
+<li><a id="sec-1-2-1-4" name="sec-1-2-1-4"></a>FunctionDefLibrary<br  /><div class="outline-text-5" id="text-1-2-1-4">
+<ul class="org-ul">
+<li>GraphDef 내의 sub-graph
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-2-1-5" name="sec-1-2-1-5"></a>MetaGraphDef<br  /><div class="outline-text-5" id="text-1-2-1-5">
+<ul class="org-ul">
+<li>그래프 구조외의 메타데이터. checkpoint 정보, 기타 편의를 위한 tag, signatures.
+</li>
+</ul>
+</div>
+</li>
+<li><a id="sec-1-2-1-6" name="sec-1-2-1-6"></a>SavedModel<br  /><div class="outline-text-5" id="text-1-2-1-6">
+<ul class="org-ul">
+<li>같은 그래프를 다른 환경에서 실행할 경우의 버전 관리
+</li>
+<li>metaGraphDef + checkpoint + extra metadata
+</li>
+</ul>
+</div>
+</li></ol>
+</div>
+<div id="outline-container-sec-1-2-2" class="outline-4">
+<h4 id="sec-1-2-2"><span class="section-number-4">1.2.2</span> How do you get a model you can use on mobile ?</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<ul class="org-ul">
+<li>GraphDef와 최신 체크포인트를 이용해 freeze graph
+</li>
+<li>얻어진 그래프를 분석해 train에만 사용되는 노드를 제거한다.
+</li>
+<li>그래프에 주어진 데이터 포맷을 알맞게 변환하는 과정을 덧붙인다.
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: dahyun</p>
+<p class="date">Created: 2018-03-19 월 09:51</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

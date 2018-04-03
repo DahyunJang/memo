@@ -1,0 +1,63 @@
+* 기타사항
+mutex_lock 이 블락 안에서만 유효하도록 짜놓음
+
+* word-dict
+- oblivious : 의식하지 못하는
+- harness : 벨트, 긴밀히 협조하는
+- delegate : 위임하다. 대표
+* 'core' folder
+** loader
+- servable: data, algorithm
+- loader : stream of specific versioned servable
+*** loader
+**** estimate resource
+- load : fetches any dat that needs to be loaded before using the servable
+**** unload
+**** servable
+- load ~ unload 사이에만 not null
+*** ResourceUnsafeLoader : public Loader
+- 불안정한 리소스를 사용할 때 상태 체크를 사용할 필요는 없으니까 Status::OK()를 리턴하는 서브 클래스
+** loader_harness.h
+- 매니저가 로더를 소유하기 전에 대화하는 것.  (어댑터?)
+- 전체적인 servable의 상태를 관리
+*** state
+knew -> kLoading
+-> kReady (load is finished)
+-> kQuiescing (is going to unavailable for serving)
+-> kunloading
+-> kDisabled (unload is finiished)
+-> kError
+- 각 상태 사이 사이 transition을 할 수 있음
+*** Options
+- retry 할 수, retry 간격, 에러시 콜백함수 설정 가능
+*** load
+- 보통은 다 상태를 바꿔주기만 하는 함수.
+- 얘는 retry(리트라이 제약 조건 안에서 실행 해줌)함수 부른 다음 상태 변화
+*** unload
+- 언로드 부르기 전에 kQuiesced -> kUnloading
+- 언로드 부르고 kUnloading -> kDisabled
+** servable_id
+- ServableId sturct 는 이름과 버전을 갖는다
+- 해시, operator 정의
+** servable_data
+- ServableId, Status, T data를 갖고 있음
+- status 는 컨스트럭터에서 설정되는데,
+데이터 없고 status 에러 거나
+status ok와 데이터 두가지 버전으로 컨스터럭터
+- T는 move_constructible 해야 하며
+- DataOrdie 는 return data_
+- ConsumeDatatOrDie 는 return std::move(DataOrdie)
+** servable_handle
+*** UntypedServableHandle
+- manager가 타입 없이 사용하려고?
+- servable() 함수의 리턴형이 AnyPtr임
+- 프론트에서 잡고 있으면 리로딩시 딜레이 발생할 수 있으므로 최대한 잡지 말아야.
+
+
+* util
+** any_ptr
+- type-safe void* 같은 것인데, 콜러가 잘못 사용한다면 null로 나타나게.
+- ptr을 받아서 (ptr.get<string>!=nullptr) 이런 식으로..
+- 지나치게 긴 타입 체크 문은 패턴적으로 좋지 않음.
+- 내부에 type, const를 제거해서 포인터를 들고오고, get시 원래 타입으로 캐스팅
+- ptr_(const_cast<void*>(reinterpret_cast<const void*>(ptr))) {}
